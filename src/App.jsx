@@ -6,136 +6,120 @@ export default function App() {
   const [status, setStatus] = useState('idle');
   const [siteData, setSiteData] = useState(null);
 
-
-const API_KEY = import.meta.env.VITE_APP_API_KEY;
   const handleGenerate = async () => {
-  if (!prompt) return;
-  setStatus('loading');
+    if (!prompt) return;
+    setStatus('loading');
 
-  try {
-    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${API_KEY}`
-      },
-      body: JSON.stringify({
-        model: "llama-3.3-70b-versatile",
-        messages: [{
-          role: "user",
-          content: `Generate a full professional website configuration in JSON for: "${prompt}". 
-          Return ONLY JSON. Fields:
-          - brand, color, title, desc, iconName, imageSearchTerm (one english word for image search)
-          - theme (either "dark" or "light" based on business type)
-          - fontStyle (either "modern", "serif", or "mono")
-          - features: 3 items {h, p}
-          - features: 3 items {h, p}
-          - pricing: 2 plans {name, price, features:[]}
-          - testimonials: 2 items {name, text, role}
-          - faq: 2 items {q, a}`
-        }],
-        response_format: { type: "json_object" }
-      })
-    });
+    try {
+      const response = await fetch('/api/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ prompt }),
+      });
 
-    const data = await response.json();
-    const cleanJson = JSON.parse(data.choices[0].message.content);
-    
-    const iconMap = { Rocket, Shield, Utensils, Coffee, ShoppingBag, Star, Zap };
-    
-    setSiteData({ ...cleanJson, Icon: iconMap[cleanJson.iconName] || Rocket });
-    setStatus('preview');
-  } catch (error) {
-    console.error(error);
-    setStatus('idle');
-    alert("Error building the beast!");
-  }
-};
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
 
-if (status === 'preview' && siteData) {
-  const isDark = siteData.theme === 'dark';
-  const fonts = {
-    modern: 'sans-serif',
-    serif: 'serif',
-    mono: 'monospace'
+      const data = await response.json();
+      const cleanJson = JSON.parse(data.choices[0].message.content);
+      const iconMap = { Rocket, Shield, Utensils, Coffee, ShoppingBag, Star, Zap };
+      setSiteData({ ...cleanJson, Icon: iconMap[cleanJson.iconName] || Rocket });
+      setStatus('preview');
+    } catch (error) {
+      console.error(error);
+      setStatus('idle');
+      alert("Error building the beast! Please try again.");
+    }
   };
 
-  const bgColor = isDark ? 'bg-slate-950' : 'bg-white';
-  const textColor = isDark ? 'text-white' : 'text-slate-900';
-  const subTextColor = isDark ? 'text-slate-400' : 'text-gray-500';
+  if (status === 'preview' && siteData) {
+    const isDark = siteData.theme === 'dark';
+    const fonts = {
+      modern: 'sans-serif',
+      serif: 'serif',
+      mono: 'monospace'
+    };
 
-  const navBgColor = isDark ? 'bg-black/80' : 'bg-white/80';
-  const borderColor = isDark ? 'border-white/10' : 'border-gray-100';
+    const bgColor = isDark ? 'bg-slate-950' : 'bg-white';
+    const textColor = isDark ? 'text-white' : 'text-slate-900';
+    const subTextColor = isDark ? 'text-slate-400' : 'text-gray-500';
 
-  return (
-    <div 
-      className={`min-h-screen transition-all duration-700 ${bgColor} ${textColor}`}
-      style={{ fontFamily: fonts[siteData.fontStyle] || 'sans-serif' }}
-    >
-      {/* Navigation */}
-      <nav className={`sticky top-0 z-50 ${navBgColor} backdrop-blur-md border-b ${borderColor} p-5 flex justify-between items-center px-10`}>
-        <div className="text-2xl font-black italic tracking-tighter flex items-center gap-2">
-          <div style={{backgroundColor: siteData.color}} className="p-1 rounded text-white"><siteData.Icon size={20}/></div>
-          {siteData.brand}
-        </div>
-        <div className="hidden md:flex gap-8 font-bold text-sm uppercase tracking-widest">
-          <a href="#features" className="hover:opacity-50 transition-opacity">Features</a>
-          <a href="#pricing" className="hover:opacity-50 transition-opacity">Pricing</a>
-          <a href="#faq" className="hover:opacity-50 transition-opacity">FAQ</a>
-        </div>
-        <button style={{ backgroundColor: siteData.color }} className="px-6 py-2 text-white rounded-xl font-bold shadow-xl">Contact Us</button>
-      </nav>
+    const navBgColor = isDark ? 'bg-black/80' : 'bg-white/80';
+    const borderColor = isDark ? 'border-white/10' : 'border-gray-100';
 
-      {/* Hero Section */}
-      <header className="px-10 py-32 grid lg:grid-cols-2 gap-20 max-w-7xl mx-auto items-center animate-in fade-in duration-700">
-        <div>
-          <h1 className="text-7xl md:text-9xl font-black mb-8 leading-[0.85] uppercase tracking-tighter italic">{siteData.title}</h1>
-          <p className={`text-xl ${subTextColor} mb-12 leading-relaxed max-w-xl border-l-4 border-gray-200 pl-6`}>{siteData.desc}</p>
-          <div className="flex gap-4">
-             <button style={{ backgroundColor: siteData.color }} className="px-10 py-5 text-white font-black rounded-2xl shadow-2xl hover:scale-105 transition-all">GET STARTED</button>
-             <button className={`px-10 py-5 ${isDark ? 'bg-slate-800' : 'bg-slate-100'} font-black rounded-2xl hover:bg-slate-200 transition-all`}>LEARN MORE</button>
+    return (
+      <div 
+        className={`min-h-screen transition-all duration-700 ${bgColor} ${textColor}`}
+        style={{ fontFamily: fonts[siteData.fontStyle] || 'sans-serif' }}
+      >
+        {/* Navigation */}
+        <nav className={`sticky top-0 z-50 ${navBgColor} backdrop-blur-md border-b ${borderColor} p-5 flex justify-between items-center px-10`}>
+          <div className="text-2xl font-black italic tracking-tighter flex items-center gap-2">
+            <div style={{backgroundColor: siteData.color}} className="p-1 rounded text-white"><siteData.Icon size={20}/></div>
+            {siteData.brand}
           </div>
-        </div>
-        <div className="relative group overflow-hidden rounded-[5rem] shadow-2xl aspect-square">
-          <img 
-            src={`https://loremflickr.com/1000/1000/${siteData.imageSearchTerm || 'action,dark'}/all`}            className="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-110" 
-            alt="hero"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-        </div>
-      </header>
+          <div className="hidden md:flex gap-8 font-bold text-sm uppercase tracking-widest">
+            <a href="#features" className="hover:opacity-50 transition-opacity">Features</a>
+            <a href="#pricing" className="hover:opacity-50 transition-opacity">Pricing</a>
+            <a href="#faq" className="hover:opacity-50 transition-opacity">FAQ</a>
+          </div>
+          <button style={{ backgroundColor: siteData.color }} className="px-6 py-2 text-white rounded-xl font-bold shadow-xl">Contact Us</button>
+        </nav>
 
-      {/* Features Section */}
-      <section id="features" className={`py-32 ${isDark ? 'bg-black' : 'bg-slate-50'} px-10`}>
-        <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-12">
-          {siteData.features?.map((f, i) => (
-            <div key={i} className="group cursor-pointer">
-              <div style={{color: siteData.color}} className="mb-6 group-hover:rotate-12 transition-transform"><Zap size={40} fill="currentColor"/></div>
-              <h3 className="text-3xl font-black mb-4 uppercase italic tracking-tighter">{f.h}</h3>
-              <p className={`${subTextColor} leading-relaxed text-lg`}>{f.p}</p>
+        {/* Hero Section */}
+        <header className="px-10 py-32 grid lg:grid-cols-2 gap-20 max-w-7xl mx-auto items-center animate-in fade-in duration-700">
+          <div>
+            <h1 className="text-7xl md:text-9xl font-black mb-8 leading-[0.85] uppercase tracking-tighter italic">{siteData.title}</h1>
+            <p className={`text-xl ${subTextColor} mb-12 leading-relaxed max-w-xl border-l-4 border-gray-200 pl-6`}>{siteData.desc}</p>
+            <div className="flex gap-4">
+               <button style={{ backgroundColor: siteData.color }} className="px-10 py-5 text-white font-black rounded-2xl shadow-2xl hover:scale-105 transition-all">GET STARTED</button>
+               <button className={`px-10 py-5 ${isDark ? 'bg-slate-800' : 'bg-slate-100'} font-black rounded-2xl hover:bg-slate-200 transition-all`}>LEARN MORE</button>
             </div>
-          ))}
-        </div>
-      </section>
+          </div>
+          <div className="relative group overflow-hidden rounded-[5rem] shadow-2xl aspect-square">
+            <img 
+              src={`https://loremflickr.com/1000/1000/${siteData.imageSearchTerm || 'action,dark'}/all`}
+              className="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-110" 
+              alt="hero"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+          </div>
+        </header>
 
-      {/* Pricing Section */}
-      <section id="pricing" className="py-32 px-10 max-w-7xl mx-auto">
-        <div className="text-center mb-20"><h2 className="text-5xl font-black italic uppercase tracking-tighter">The Investment</h2></div>
-        <div className="grid md:grid-cols-2 gap-10">
-          {siteData.pricing?.map((p, i) => (
-            <div key={i} className={`border-4 ${isDark ? 'border-white/10' : 'border-slate-900'} p-12 rounded-[3rem] hover:shadow-[20px_20px_0px_0px_rgba(0,0,0,1)] transition-all`}>
-              <h4 className="text-xl font-black uppercase mb-2">{p.name}</h4>
-              <div className="text-6xl font-black mb-8 italic">{p.price}</div>
-              <ul className="mb-10 space-y-4">
-                {p.features?.map((feat, idx) => <li key={idx} className={`flex gap-2 font-bold ${textColor}`}><Check size={20} color={siteData.color}/> {feat}</li>)}
-              </ul>
-              <button style={{backgroundColor: i === 1 ? siteData.color : (isDark ? 'black' : 'black')}} className="w-full py-5 text-white font-black rounded-2xl">CHOOSE PLAN</button>
-            </div>
-          ))}
-        </div>
-      </section>
+        {/* Features Section */}
+        <section id="features" className={`py-32 ${isDark ? 'bg-black' : 'bg-slate-50'} px-10`}>
+          <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-12">
+            {siteData.features?.map((f, i) => (
+              <div key={i} className="group cursor-pointer">
+                <div style={{color: siteData.color}} className="mb-6 group-hover:rotate-12 transition-transform"><Zap size={40} fill="currentColor"/></div>
+                <h3 className="text-3xl font-black mb-4 uppercase italic tracking-tighter">{f.h}</h3>
+                <p className={`${subTextColor} leading-relaxed text-lg`}>{f.p}</p>
+              </div>
+            ))}
+          </div>
+        </section>
 
- {/* Testimonials */}
+        {/* Pricing Section */}
+        <section id="pricing" className="py-32 px-10 max-w-7xl mx-auto">
+          <div className="text-center mb-20"><h2 className="text-5xl font-black italic uppercase tracking-tighter">The Investment</h2></div>
+          <div className="grid md:grid-cols-2 gap-10">
+            {siteData.pricing?.map((p, i) => (
+              <div key={i} className={`border-4 ${isDark ? 'border-white/10' : 'border-slate-900'} p-12 rounded-[3rem] hover:shadow-[20px_20px_0px_0px_rgba(0,0,0,1)] transition-all`}>
+                <h4 className="text-xl font-black uppercase mb-2">{p.name}</h4>
+                <div className="text-6xl font-black mb-8 italic">{p.price}</div>
+                <ul className="mb-10 space-y-4">
+                  {p.features?.map((feat, idx) => <li key={idx} className={`flex gap-2 font-bold ${textColor}`}><Check size={20} color={siteData.color}/> {feat}</li>)}
+                </ul>
+                <button style={{backgroundColor: i === 1 ? siteData.color : (isDark ? 'black' : 'black')}} className="w-full py-5 text-white font-black rounded-2xl">CHOOSE PLAN</button>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Testimonials */}
         <section className="py-32 bg-black text-white px-10 overflow-hidden relative">
            <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-20 relative z-10">
               {siteData.testimonials?.map((t, i) => (
@@ -152,15 +136,15 @@ if (status === 'preview' && siteData) {
            <div className="absolute top-0 right-0 opacity-10 text-[20rem] font-black pointer-events-none tracking-tighter uppercase italic">TRUE</div>
         </section>
 
-      {/* Footer */}
-      <footer className={`py-20 px-10 border-t ${borderColor} text-center`}>
-        <div className="text-4xl font-black italic mb-8 tracking-tighter uppercase">{siteData.brand}</div>
-        <p className={`${subTextColor} mb-10`}>© 2026 Crafted by AI Intelligence. All Rights Reserved.</p>
-        <button onClick={() => setStatus('idle')} className="bg-black text-white px-8 py-3 rounded-full flex items-center gap-2 mx-auto hover:scale-105 transition-all"><ArrowLeft size={18}/> CREATE ANOTHER WORLD</button>
-      </footer>
-    </div>
-  );
-}
+        {/* Footer */}
+        <footer className={`py-20 px-10 border-t ${borderColor} text-center`}>
+          <div className="text-4xl font-black italic mb-8 tracking-tighter uppercase">{siteData.brand}</div>
+          <p className={`${subTextColor} mb-10`}>© 2026 Crafted by AI Intelligence. All Rights Reserved.</p>
+          <button onClick={() => setStatus('idle')} className="bg-black text-white px-8 py-3 rounded-full flex items-center gap-2 mx-auto hover:scale-105 transition-all"><ArrowLeft size={18}/> CREATE ANOTHER WORLD</button>
+        </footer>
+      </div>
+    );
+  }
 
   return (
     <div className="h-screen bg-slate-950 flex flex-col items-center justify-center p-6 text-white text-center relative overflow-hidden">
