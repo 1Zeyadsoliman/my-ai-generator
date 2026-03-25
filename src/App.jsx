@@ -7,8 +7,7 @@ export default function App() {
   const [siteData, setSiteData] = useState(null);
 
 
-const API_KEY = process.env.REACT_APP_API_KEY; // Make
-  const handleGenerate = async () => {
+const API_KEY = import.meta.env.VITE_APP_API_KEY;  const handleGenerate = async () => {
   if (!prompt) return;
   setStatus('loading');
 
