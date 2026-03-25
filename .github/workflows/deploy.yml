@@ -1,5 +1,4 @@
-name: Deploy to GitHub Pages
-
+name: Build with Vite
 on:
   push:
     branches: [ master ]
