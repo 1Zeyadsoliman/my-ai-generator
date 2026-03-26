@@ -24,8 +24,7 @@ export default function App() {
             content: `Generate a full professional website configuration in JSON for: "${prompt}". 
             Return ONLY JSON. Fields:
             - brand, color, title, desc, iconName (one of: "Rocket", "Shield", "Utensils", "Coffee", "ShoppingBag", "Star", "Zap") 
-            - imageSearchTerm: a short descriptive phrase (2-3 words) for an image search that best represents the business (e.g., "luxury spa", "gourmet burger", "tech startup")
-            - theme (either "dark" or "light" based on business type)
+- imageSearchTerm: a short descriptive phrase (2-4 words) that best represents the business (e.g., "luxury spa", "gourmet burger", "modern tech office")            - theme (either "dark" or "light" based on business type)
             - fontStyle (either "modern", "serif", or "mono")
             - features: 3 items {h, p}
             - pricing: 2 plans {name, price, features:[]}
@@ -94,8 +93,12 @@ export default function App() {
           </div>
           <div className="relative group overflow-hidden rounded-[5rem] shadow-2xl aspect-square">
           <img 
-            src={`https://source.unsplash.com/1000x1000/?${siteData.imageSearchTerm || 'business'}`} 
-            
+              src={`https://source.unsplash.com/1000x1000/?${encodeURIComponent(siteData.imageSearchTerm || 'business')}`}
+              className="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-110" 
+          alt="hero"
+      onError={(e) => {
+              e.target.src = 'https://picsum.photos/1000/1000?random=1';
+            }}
           />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
           </div>
