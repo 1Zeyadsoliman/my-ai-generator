@@ -11,17 +11,29 @@ export default function App() {
     setStatus('loading');
 
     try {
-      const response = await fetch('/api/generate', {
-        method: 'POST',
+      const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${import.meta.env.VITE_APP_API_KEY}`
         },
-        body: JSON.stringify({ prompt }),
+        body: JSON.stringify({
+          model: "llama-3.3-70b-versatile",
+          messages: [{
+            role: "user",
+            content: `Generate a full professional website configuration in JSON for: "${prompt}". 
+            Return ONLY JSON. Fields:
+            - brand, color, title, desc, iconName, imageSearchTerm (one english word for image search)
+            - theme (either "dark" or "light" based on business type)
+            - fontStyle (either "modern", "serif", or "mono")
+            - features: 3 items {h, p}
+            - pricing: 2 plans {name, price, features:[]}
+            - testimonials: 2 items {name, text, role}
+            - faq: 2 items {q, a}`
+          }],
+          response_format: { type: "json_object" }
+        })
       });
-
-      if (!response.ok) {
-        throw new Error(`API error: ${response.status}`);
-      }
 
       const data = await response.json();
       const cleanJson = JSON.parse(data.choices[0].message.content);
@@ -31,10 +43,11 @@ export default function App() {
     } catch (error) {
       console.error(error);
       setStatus('idle');
-      alert("Error building the beast! Please try again.");
+      alert("Error building the beast!");
     }
   };
 
+  // باقي الكود (واجهة المستخدم) كما هو دون تغيير
   if (status === 'preview' && siteData) {
     const isDark = siteData.theme === 'dark';
     const fonts = {
