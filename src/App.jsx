@@ -23,7 +23,8 @@ export default function App() {
             role: "user",
             content: `Generate a full professional website configuration in JSON for: "${prompt}". 
             Return ONLY JSON. Fields:
-            - brand, color, title, desc, iconName, imageSearchTerm (one english word for image search)
+            - brand, color, title, desc, iconName (one of: "Rocket", "Shield", "Utensils", "Coffee", "ShoppingBag", "Star", "Zap") 
+            - imageSearchTerm: a short descriptive phrase (2-3 words) for an image search that best represents the business (e.g., "luxury spa", "gourmet burger", "tech startup")
             - theme (either "dark" or "light" based on business type)
             - fontStyle (either "modern", "serif", or "mono")
             - features: 3 items {h, p}
@@ -47,7 +48,6 @@ export default function App() {
     }
   };
 
-  // باقي الكود (واجهة المستخدم) كما هو دون تغيير
   if (status === 'preview' && siteData) {
     const isDark = siteData.theme === 'dark';
     const fonts = {
@@ -93,11 +93,10 @@ export default function App() {
             </div>
           </div>
           <div className="relative group overflow-hidden rounded-[5rem] shadow-2xl aspect-square">
-            <img 
-              src={`https://source.unsplash.com/featured/?${siteData.imageSearchTerm},business`}
-          className="w-full h-full object-cover"
-          alt="hero"
-      />
+          <img 
+            src={`https://source.unsplash.com/1000x1000/?${siteData.imageSearchTerm || 'business'}`} 
+            
+          />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
           </div>
         </header>
