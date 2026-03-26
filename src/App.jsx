@@ -94,7 +94,7 @@ export default function App() {
           </div>
           <div className="relative group overflow-hidden rounded-[5rem] shadow-2xl aspect-square">
             <img 
-              src={`https://source.unsplash.com/1000x1000/?${siteData.imageSearchTerm || 'business'}`}
+              src={`https://source.unsplash.com/featured/?${siteData.imageSearchTerm},business`}
           className="w-full h-full object-cover"
           alt="hero"
       />
