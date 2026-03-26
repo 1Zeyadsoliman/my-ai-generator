@@ -88,16 +88,16 @@ export default function App() {
             <h1 className="text-7xl md:text-9xl font-black mb-8 leading-[0.85] uppercase tracking-tighter italic">{siteData.title}</h1>
             <p className={`text-xl ${subTextColor} mb-12 leading-relaxed max-w-xl border-l-4 border-gray-200 pl-6`}>{siteData.desc}</p>
             <div className="flex gap-4">
-               <button style={{ backgroundColor: siteData.color }} className="px-10 py-5 text-white font-black rounded-2xl shadow-2xl hover:scale-105 transition-all">GET STARTED</button>
-               <button className={`px-10 py-5 ${isDark ? 'bg-slate-800' : 'bg-slate-100'} font-black rounded-2xl hover:bg-slate-200 transition-all`}>LEARN MORE</button>
+                <button style={{ backgroundColor: siteData.color }} className="px-10 py-5 text-white font-black rounded-2xl shadow-2xl hover:scale-105 transition-all">GET STARTED</button>
+                <button className={`px-10 py-5 ${isDark ? 'bg-slate-800' : 'bg-slate-100'} font-black rounded-2xl hover:bg-slate-200 transition-all`}>LEARN MORE</button>
             </div>
           </div>
           <div className="relative group overflow-hidden rounded-[5rem] shadow-2xl aspect-square">
             <img 
-              src={`https://loremflickr.com/1000/1000/${siteData.imageSearchTerm || 'action,dark'}/all`}
-              className="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-110" 
-              alt="hero"
-            />
+              src={`https://source.unsplash.com/1000x1000/?${siteData.imageSearchTerm || 'business'}`}
+          className="w-full h-full object-cover"
+          alt="hero"
+      />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
           </div>
         </header>
