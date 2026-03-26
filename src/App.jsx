@@ -1,10 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Sparkles, Zap, Rocket, ArrowLeft, Shield, Utensils, Coffee, ShoppingBag, Star, Check, HelpCircle, Mail } from 'lucide-react';
 
 export default function App() {
   const [prompt, setPrompt] = useState('');
   const [status, setStatus] = useState('idle');
   const [siteData, setSiteData] = useState(null);
+  const [imageUrl, setImageUrl] = useState('');
+  const [imageLoading, setImageLoading] = useState(true);
+
+  // جلب الصورة عندما يتغير siteData
+  useEffect(() => {
+    if (siteData?.imageSuggestion) {
+      setImageLoading(true);
+      const searchTerm = encodeURIComponent(siteData.imageSuggestion);
+      const imgSrc = `https://source.unsplash.com/1000x1000/?${searchTerm}`;
+      setImageUrl(imgSrc);
+      // اختبار تحميل الصورة
+      const img = new Image();
+      img.onload = () => setImageLoading(false);
+      img.onerror = () => {
+        // إذا فشل Unsplash، استخدم Picsum كبديل
+        setImageUrl(`https://picsum.photos/1000/1000?random=${Math.random()}`);
+        setImageLoading(false);
+      };
+      img.src = imgSrc;
+    }
+  }, [siteData]);
 
   const handleGenerate = async () => {
     if (!prompt) return;
@@ -23,10 +44,10 @@ export default function App() {
             role: "user",
             content: `Generate a full professional website configuration in JSON for: "${prompt}". 
             Return ONLY JSON. Fields:
-            - brand, color, title, desc, iconName (one of: "Rocket", "Shield", "Utensils", "Coffee", "ShoppingBag", "Star", "Zap") 
-- imageSearchTerm: a short descriptive phrase (2-4 words) that best represents the business (e.g., "luxury spa", "gourmet burger", "modern tech office")            - theme (either "dark" or "light" based on business type)
+            - brand, color, title, desc, iconName (one of: "Rocket", "Shield", "Utensils", "Coffee", "ShoppingBag", "Star", "Zap")
+            - theme (either "dark" or "light")
             - fontStyle (either "modern", "serif", or "mono")
-            - features: 3 items {h, p}
+            - imageSuggestion: a short descriptive phrase (3-5 words) that accurately represents the business visually, suitable for an image search (e.g., "modern coffee shop interior", "luxury spa with candles", "woman in suit with hat mafia style")            - features: 3 items {h, p}
             - pricing: 2 plans {name, price, features:[]}
             - testimonials: 2 items {name, text, role}
             - faq: 2 items {q, a}`
@@ -87,19 +108,25 @@ export default function App() {
             <h1 className="text-7xl md:text-9xl font-black mb-8 leading-[0.85] uppercase tracking-tighter italic">{siteData.title}</h1>
             <p className={`text-xl ${subTextColor} mb-12 leading-relaxed max-w-xl border-l-4 border-gray-200 pl-6`}>{siteData.desc}</p>
             <div className="flex gap-4">
-                <button style={{ backgroundColor: siteData.color }} className="px-10 py-5 text-white font-black rounded-2xl shadow-2xl hover:scale-105 transition-all">GET STARTED</button>
-                <button className={`px-10 py-5 ${isDark ? 'bg-slate-800' : 'bg-slate-100'} font-black rounded-2xl hover:bg-slate-200 transition-all`}>LEARN MORE</button>
+              <button style={{ backgroundColor: siteData.color }} className="px-10 py-5 text-white font-black rounded-2xl shadow-2xl hover:scale-105 transition-all">GET STARTED</button>
+              <button className={`px-10 py-5 ${isDark ? 'bg-slate-800' : 'bg-slate-100'} font-black rounded-2xl hover:bg-slate-200 transition-all`}>LEARN MORE</button>
             </div>
           </div>
           <div className="relative group overflow-hidden rounded-[5rem] shadow-2xl aspect-square">
-          <img 
-              src={`https://source.unsplash.com/1000x1000/?${encodeURIComponent(siteData.imageSearchTerm || 'business')}`}
+            {imageLoading && (
+              <div className="absolute inset-0 flex items-center justify-center bg-black/50 z-10">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-white"></div>
+              </div>
+            )}
+            <img 
+              src={imageUrl || `https://picsum.photos/1000/1000?random=${Math.random()}`}
               className="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-110" 
-          alt="hero"
-      onError={(e) => {
-              e.target.src = 'https://picsum.photos/1000/1000?random=1';
-            }}
-          />
+              alt="hero"
+              onError={(e) => {
+                e.target.src = `https://picsum.photos/1000/1000?random=${Math.random()}`;
+                setImageLoading(false);
+              }}
+            />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
           </div>
         </header>
@@ -136,19 +163,19 @@ export default function App() {
 
         {/* Testimonials */}
         <section className="py-32 bg-black text-white px-10 overflow-hidden relative">
-           <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-20 relative z-10">
-              {siteData.testimonials?.map((t, i) => (
-                <div key={i} className="space-y-6">
-                  <div className="flex gap-1 text-yellow-400"><Star fill="currentColor"/><Star fill="currentColor"/><Star fill="currentColor"/><Star fill="currentColor"/><Star fill="currentColor"/></div>
-                  <p className="text-3xl font-bold leading-tight">"{t.text}"</p>
-                  <div>
-                    <div className="font-black uppercase">{t.name}</div>
-                    <div className="text-gray-500 text-sm">{t.role}</div>
-                  </div>
+          <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-20 relative z-10">
+            {siteData.testimonials?.map((t, i) => (
+              <div key={i} className="space-y-6">
+                <div className="flex gap-1 text-yellow-400"><Star fill="currentColor"/><Star fill="currentColor"/><Star fill="currentColor"/><Star fill="currentColor"/><Star fill="currentColor"/></div>
+                <p className="text-3xl font-bold leading-tight">"{t.text}"</p>
+                <div>
+                  <div className="font-black uppercase">{t.name}</div>
+                  <div className="text-gray-500 text-sm">{t.role}</div>
                 </div>
-              ))}
-           </div>
-           <div className="absolute top-0 right-0 opacity-10 text-[20rem] font-black pointer-events-none tracking-tighter uppercase italic">TRUE</div>
+              </div>
+            ))}
+          </div>
+          <div className="absolute top-0 right-0 opacity-10 text-[20rem] font-black pointer-events-none tracking-tighter uppercase italic">TRUE</div>
         </section>
 
         {/* Footer */}
