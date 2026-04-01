@@ -8,18 +8,15 @@ export default function App() {
   const [imageUrl, setImageUrl] = useState('');
   const [imageLoading, setImageLoading] = useState(true);
 
-  // جلب الصورة عندما يتغير siteData
   useEffect(() => {
     if (siteData?.imageSuggestion) {
       setImageLoading(true);
       const searchTerm = encodeURIComponent(siteData.imageSuggestion);
       const imgSrc = `https://source.unsplash.com/1000x1000/?${searchTerm}`;
       setImageUrl(imgSrc);
-      // اختبار تحميل الصورة
       const img = new Image();
       img.onload = () => setImageLoading(false);
       img.onerror = () => {
-        // إذا فشل Unsplash، استخدم Picsum كبديل
         setImageUrl(`https://picsum.photos/1000/1000?random=${Math.random()}`);
         setImageLoading(false);
       };
