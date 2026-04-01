@@ -197,7 +197,7 @@ export default function App() {
         {/* Footer */}
         <footer className={`py-20 px-10 border-t ${borderColor} text-center`}>
           <div className="text-4xl font-black italic mb-8 tracking-tighter uppercase">{siteData.brand}</div>
-          <p className={`${subTextColor} mb-10`}>© 2026 Crafted by AI Intelligence. All Rights Reserved.</p>
+          <p className={`${subTextColor} mb-10`}>© 2026 Crafted by AI Intelligence. All Rights Reserved.<br>© 2026 ZEYAD SOLIMAN - BUILT WITH PASSION</br></p>
           <button onClick={() => setStatus('idle')} className="bg-black text-white px-8 py-3 rounded-full flex items-center gap-2 mx-auto hover:scale-105 transition-all"><ArrowLeft size={18}/> CREATE ANOTHER WORLD</button>
         </footer>
       </div>
