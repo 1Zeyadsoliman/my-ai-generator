@@ -21,6 +21,8 @@ jobs:
       - run: npx vite build
         env:
           VITE_APP_API_KEY: ${{ secrets.VITE_APP_API_KEY }}
+          VITE_PEXELS_KEY: ${{ secrets.VITE_PEXELS_KEY }}
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist
