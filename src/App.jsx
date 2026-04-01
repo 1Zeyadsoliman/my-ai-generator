@@ -119,7 +119,7 @@ export default function App() {
         {/* Hero Section */}
         <header className="px-10 py-32 grid lg:grid-cols-2 gap-20 max-w-7xl mx-auto items-center animate-in fade-in duration-700">
           <div>
-            <h1 className="text-6xl md:text-8xl font-black mb-8 uppercase tracking-tighter italic whitespace-nowrap md:whitespace-normal overflow-x-auto md:overflow-visible">
+            <h1 className="text-5xl md:text-6xl font-black mb-8 uppercase tracking-tighter italic whitespace-nowrap md:whitespace-normal overflow-x-auto md:overflow-visible">
                 {siteData.title?.replace(/\n/g, ' ')}
             </h1>
             <p className={`text-xl ${subTextColor} mb-12 leading-relaxed max-w-xl border-l-4 border-gray-200 pl-6`}>{siteData.desc}</p>
