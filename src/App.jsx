@@ -119,7 +119,7 @@ export default function App() {
         {/* Hero Section */}
         <header className="px-10 py-32 grid lg:grid-cols-2 gap-20 max-w-7xl mx-auto items-center animate-in fade-in duration-700">
           <div>
-            <h1 className="text-5xl md:text-6xl font-black mb-8 uppercase tracking-tighter italic whitespace-nowrap md:whitespace-normal overflow-x-auto md:overflow-visible">
+            <h1 className="text-5xl md:text-xl font-black mb-8 uppercase tracking-tighter italic whitespace-nowrap md:whitespace-normal overflow-x-auto md:overflow-visible">
                 {siteData.title?.replace(/\n/g, ' ')}
             </h1>
             <p className={`text-xl ${subTextColor} mb-12 leading-relaxed max-w-xl border-l-4 border-gray-200 pl-6`}>{siteData.desc}</p>
@@ -197,7 +197,7 @@ export default function App() {
         {/* Footer */}
         <footer className={`py-20 px-10 border-t ${borderColor} text-center`}>
           <div className="text-4xl font-black italic mb-8 tracking-tighter uppercase">{siteData.brand}</div>
-          <p className={`${subTextColor} mb-10`}>© 2026 Crafted by AI Intelligence. All Rights Reserved.<br>© 2026 ZEYAD SOLIMAN - BUILT WITH PASSION</br></p>
+          <p className={`${subTextColor} mb-10`}>© 2026 ZEYAD SOLIMAN - BUILT WITH PASSION</p>
           <button onClick={() => setStatus('idle')} className="bg-black text-white px-8 py-3 rounded-full flex items-center gap-2 mx-auto hover:scale-105 transition-all"><ArrowLeft size={18}/> CREATE ANOTHER WORLD</button>
         </footer>
       </div>
