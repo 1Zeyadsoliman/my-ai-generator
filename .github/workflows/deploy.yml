@@ -1,7 +1,7 @@
 name: Build with Vite
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
 
 permissions:
   contents: read
