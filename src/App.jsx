@@ -117,34 +117,34 @@ export default function App() {
         </nav>
 
         {/* Hero Section */}
-        <header className="px-10 py-32 grid lg:grid-cols-2 gap-20 max-w-7xl mx-auto items-center animate-in fade-in duration-700">
+        <header className="px-10 py-32 grid lg:grid-cols-2 gap-8 lg:gap-32 max-w-7xl mx-auto items-center animate-in fade-in duration-700">
           <div>
-            <h1 className="text-7xl md:text-9xl font-black mb-8 uppercase tracking-tighter italic whitespace-nowrap md:whitespace-normal overflow-x-auto md:overflow-visible">
-                {siteData.title?.replace(/\n/g, ' ')}
-            </h1>
+          <h1 className="text-7xl md:text-9xl font-black mb-8 uppercase tracking-tighter italic whitespace-nowrap md:whitespace-normal overflow-x-auto md:overflow-visible">
+            {siteData.title?.replace(/\n/g, ' ')}
+          </h1>
             <p className={`text-xl ${subTextColor} mb-12 leading-relaxed max-w-xl border-l-4 border-gray-200 pl-6`}>{siteData.desc}</p>
-            <div className="flex gap-4">
-              <button style={{ backgroundColor: siteData.color }} className="px-10 py-5 text-white font-black rounded-2xl shadow-2xl hover:scale-105 transition-all">GET STARTED</button>
-              <button className={`px-10 py-5 ${isDark ? 'bg-slate-800' : 'bg-slate-100'} font-black rounded-2xl hover:bg-slate-200 transition-all`}>LEARN MORE</button>
-            </div>
-          </div>
-          <div className="relative group overflow-hidden rounded-[5rem] shadow-2xl aspect-square">
-            {imageLoading && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black/50 z-10">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-white"></div>
+              <div className="flex gap-4">
+      <button style={{ backgroundColor: siteData.color }} className="px-10 py-5 text-white font-black rounded-2xl shadow-2xl hover:scale-105 transition-all">GET STARTED</button>
+      <button className={`px-10 py-5 ${isDark ? 'bg-slate-800' : 'bg-slate-100'} font-black rounded-2xl hover:bg-slate-200 transition-all`}>LEARN MORE</button>
               </div>
-            )}
-            <img 
-              src={imageUrl || `https://picsum.photos/1000/1000?random=${Math.random()}`}
-              className="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-110" 
-              alt="hero"
-              onError={(e) => {
-                e.target.src = `https://picsum.photos/1000/1000?random=${Math.random()}`;
-                setImageLoading(false);
-              }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+            </div>
+          <div className="relative group overflow-hidden rounded-[5rem] shadow-2xl aspect-square justify-self-end">
+              {imageLoading && (
+            <div className="absolute inset-0 flex items-center justify-center bg-black/50 z-10">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-white"></div>
           </div>
+          )}
+    <img 
+      src={imageUrl || `https://picsum.photos/1000/1000?random=${Math.random()}`}
+      className="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-110" 
+      alt="hero"
+      onError={(e) => {
+        e.target.src = `https://picsum.photos/1000/1000?random=${Math.random()}`;
+        setImageLoading(false);
+      }}
+    />
+    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+  </div>
         </header>
 
         {/* Features Section */}
