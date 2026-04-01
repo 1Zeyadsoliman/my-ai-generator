@@ -8,19 +8,35 @@ export default function App() {
   const [imageUrl, setImageUrl] = useState('');
   const [imageLoading, setImageLoading] = useState(true);
 
+  const fetchPexelsImage = async (query) => {
+    const apiKey = import.meta.env.VITE_PEXELS_KEY;
+    if (!apiKey) {
+      console.warn("Pexels key not set, falling back to Picsum");
+      return `https://picsum.photos/1000/1000?random=${Math.random()}`;
+    }
+    try {
+      const url = `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=1&orientation=landscape`;
+      const res = await fetch(url, {
+        headers: { Authorization: apiKey }
+      });
+      const data = await res.json();
+      if (data.photos && data.photos.length > 0) {
+        return data.photos[0].src.large2x; // أو src.original للحجم الأصلي
+      }
+      return `https://picsum.photos/1000/1000?random=${Math.random()}`;
+    } catch (error) {
+      console.error("Pexels API error", error);
+      return `https://picsum.photos/1000/1000?random=${Math.random()}`;
+    }
+  };
+
   useEffect(() => {
     if (siteData?.imageSuggestion) {
       setImageLoading(true);
-      const searchTerm = encodeURIComponent(siteData.imageSuggestion);
-      const imgSrc = `https://source.unsplash.com/1000x1000/?${searchTerm}`;
-      setImageUrl(imgSrc);
-      const img = new Image();
-      img.onload = () => setImageLoading(false);
-      img.onerror = () => {
-        setImageUrl(`https://picsum.photos/1000/1000?random=${Math.random()}`);
+      fetchPexelsImage(siteData.imageSuggestion).then(url => {
+        setImageUrl(url);
         setImageLoading(false);
-      };
-      img.src = imgSrc;
+      });
     }
   }, [siteData]);
 
@@ -44,7 +60,8 @@ export default function App() {
             - brand, color, title, desc, iconName (one of: "Rocket", "Shield", "Utensils", "Coffee", "ShoppingBag", "Star", "Zap")
             - theme (either "dark" or "light")
             - fontStyle (either "modern", "serif", or "mono")
-            - imageSuggestion: a short descriptive phrase (3-5 words) that accurately represents the business visually, suitable for an image search (e.g., "modern coffee shop interior", "luxury spa with candles", "woman in suit with hat mafia style")            - features: 3 items {h, p}
+            - imageSuggestion: a short descriptive phrase (3-5 words) that accurately represents the business visually, suitable for an image search (e.g., "modern coffee shop interior", "luxury spa with candles", "woman in suit with hat mafia style")
+            - features: 3 items {h, p}
             - pricing: 2 plans {name, price, features:[]}
             - testimonials: 2 items {name, text, role}
             - faq: 2 items {q, a}`
