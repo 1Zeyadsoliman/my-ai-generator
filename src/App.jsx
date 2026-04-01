@@ -8,7 +8,6 @@ export default function App() {
   const [imageUrl, setImageUrl] = useState('');
   const [imageLoading, setImageLoading] = useState(true);
 
-  // جلب صورة من Pexels API (مجاني)
   const fetchPexelsImage = async (query) => {
     const apiKey = import.meta.env.VITE_PEXELS_KEY;
     if (!apiKey) {
@@ -120,8 +119,8 @@ export default function App() {
         {/* Hero Section */}
         <header className="px-10 py-32 grid lg:grid-cols-2 gap-20 max-w-7xl mx-auto items-center animate-in fade-in duration-700">
           <div>
-            <h1 className="text-7xl md:text-9xl font-black mb-8 uppercase tracking-tighter italic whitespace-normal break-words leading-[1.1] md:leading-[0.9]">
-              {siteData.title}
+            <h1 className="text-7xl md:text-9xl font-black mb-8 uppercase tracking-tighter italic whitespace-nowrap md:whitespace-normal overflow-x-auto md:overflow-visible">
+                {siteData.title?.replace(/\n/g, ' ')}
             </h1>
             <p className={`text-xl ${subTextColor} mb-12 leading-relaxed max-w-xl border-l-4 border-gray-200 pl-6`}>{siteData.desc}</p>
             <div className="flex gap-4">
