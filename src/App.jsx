@@ -21,7 +21,7 @@ export default function App() {
       });
       const data = await res.json();
       if (data.photos && data.photos.length > 0) {
-        return data.photos[0].src.large2x; // حجم مناسب
+        return data.photos[0].src.large2x;
       }
       return `https://picsum.photos/1000/1000?random=${Math.random()}`;
     } catch (error) {
